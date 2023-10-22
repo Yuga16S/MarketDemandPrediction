@@ -1,0 +1,153 @@
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  background-size: cover;
+  background-attachment: fixed !important;
+}
+
+/*<!--body {
+  min-height: 100%;
+  background: linear-gradient(180deg, #B2DFFF 0%, rgba(167, 102, 206, 0.20) 50%, rgba(177, 51, 255, 0.00) 100%);
+  background-attachment: fixed !important;
+}-->*/
+
+.home-page-logo {
+    width: 180px !important;
+}
+a {
+    text-decoration: none;
+}
+
+.background-white {
+  background: white !important;
+}
+
+.background-green {
+    background: darkolivegreen !important;
+}
+
+.background-off-white {
+    background: #E9E9E9 !important;
+}
+
+.btn-color-primary {
+    background: rgb(34 61 39) !important;
+    color: white;
+}
+
+.btn-color-unpublish {
+    background: #000000 !important;
+    color: white;
+}
+
+.btn-color-secondary {
+    background: #898A86;
+    color: white;
+}
+
+.btn-color-success {
+    background: rgba(93, 166, 0, 0.68);
+    color: white;
+ }
+
+ .btn-color-disabled {
+    background: rgba(24, 24, 24, 0.38);
+ }
+
+.register-logo {
+    width: 180px; !important;
+    height: 180px; !important;
+}
+
+hr {
+  border-color: black !important;
+  border-width: 2px !important;
+  border-style: solid;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+a {
+    color: black;
+}
+
+.right-arrow {
+    width: 5px;
+    height: 10px;
+}
+
+.tick {
+    width: 10px;
+    height: 10px;
+}
+
+.text-color-black {
+    color: black;
+}
+
+.fw-bold-sm {
+    font-weight: 600 !important;
+}
+
+.register-ribbon {
+  width: 100%;
+  background: transparent;
+}
+
+.container {
+    text-align: center;
+}
+
+.team {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.team-member {
+    display: inline-block;
+    flex: 0 0 calc(33.33% - 20px);
+    padding: 10px;
+    border: 0;
+    text-align: center;
+}
+
+.label {
+    font-weight: bold;
+    color: #007BFF;
+    margin-right: 10px;
+}
+
+.label-deco{
+   color: black;
+   margin-right: 10px;
+    font-size: larger;
+}
+
+.value {
+    color: #333;
+    font-size: 1.2em;
+}
+
+.value-deco{
+    color: black;
+    font-size: 1.0em;
+}
+
+.left-align-content {
+        text-align: left;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3); /* Adjust the last value (0.5) for opacity */
+    z-index: -1; /* Place it below the content */
+}

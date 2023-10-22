@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About Us</title>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <style>
+img {
+  border-radius: 50%;
+}
+</style>
+</head>
+<body class="about-us">
+
+    <div class="container" style="background-image: url('{% static "images/bgimage.jpg" %}'); background-repeat: no-repeat; background-size: cover;">
+            <img src="{% static 'images/logo3.png' %}" class="register-logo">
+            <h1 style="text-align: center">Welcome to Crop Market Demand Prediction</h1>
+        <div>
+            <div>
+                <p style="font-style: italic; font-size: 30px; margin-left: 60px; margin-right: 60px; margin-top: 40px;">
+                    Your gateway to the future of agriculture <br>In a world where informed decisions can make or break a harvest, our project is here to revolutionize the way farmers and producers approach crop planning
+                </p><br>
+                <h1 style="margin-left: 60px; margin-right: 60px;">Mission</h1>
+                <p style="font-size: 30px; margin-left: 60px; margin-right: 60px;">
+                    Our mission is to empower farmers and producers with data-driven insights, enabling them to make precise and profitable decisions in crop selection and production strategies. We're dedicated to boosting efficiency and profitability in the agricultural industry.
+                </p>
+            </div><br>
+            <h1 style="align-content: center">Meet the Team</h1>
+        <div class="team">
+            <div class="team-member">
+                <img src="{% static 'images/avatar.jpeg' %}" alt="Avatar" style="width:100px">
+                <h3>Yugapriya Shankar</h3>
+                <h4>Web Developer</h4>
+            </div>
+            <div class="team-member">
+                <img src="{% static 'images/avatar.jpeg' %}" alt="Avatar" style="width:100px">
+                <h3>Sagar</h3>
+                <h4>Data Scientist</h4>
+            </div>
+            <div class="team-member">
+                <img src="{% static 'images/avatar.jpeg' %}" alt="Avatar" style="width:100px">
+                <h3>Nikhil</h3>
+                <h4>Data Scientist</h4>
+            </div>
+        </div>
+            <h1 style="margin-left: 60px; margin-right: 60px;">Contact Us : <i style="font-size: 30px;">marketdemandprediction@gmail.com
+                </i> </h1>
+        </div>
+    </div>
+</body>
+</html>

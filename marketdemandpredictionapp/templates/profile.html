@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}
+User Profile
+{% endblock %}
+{% block content %}
+<div class="w-100 d-flex flex-column justify-content-center align-items-center">
+   <p class="capitalize fs-3">
+        <span class="label-deco">Username:</span>
+        <span class="value-deco">{{ user_profile.user.username | capfirst }}</span>
+    </p>
+    <p class="capitalize fs-3">
+        <span class="label-deco">Email ID:</span>
+        <span class="value-deco">{{ user_profile.user.email }}</span>
+    </p>
+    <p class="capitalize fs-3">
+        <span class="label-deco">Update Password:</span>
+        <a class="value-deco" href="{% url 'forgot_password' %}">click here!</a>
+    </p>
+</div>
+{% endblock %}

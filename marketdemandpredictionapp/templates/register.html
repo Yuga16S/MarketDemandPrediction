@@ -1,0 +1,44 @@
+{% load django_bootstrap5 %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    {% bootstrap_css %}
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+<body class="w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('{% static "images/bgimage.jpg" %}'); background-repeat: no-repeat; background-size: cover;">
+<div class="register-ribbon w-100" >
+    <div style="display: inline-block; float: right; font-style: italic; text-decoration: underline; font-size: 20px;"><a href="{% url 'about_us' %}">About Us</a></div>
+</div>
+<img src="{% static 'images/logo3.png' %}" class="register-logo">
+<div class="w-50 p-5 background-white shadow-lg rounded-3 mt-4">
+    <form method="post" class="m-3 d-flex flex-column align-items-center">
+        {% csrf_token %}
+        <input type="text" id="username" name="username" class="form-control form-control-lg shadow-sm"
+               placeholder="USERNAME"><br>
+
+        <input type="email" id="email" name="email" class="form-control form-control-lg shadow-sm" placeholder="EMAIL"><br>
+
+        <input type="password" id="password" name="password" class="form-control form-control-lg shadow-sm"
+               placeholder="PASSWORD"><br>
+
+        <input type="submit" value="Sign up" class="btn rounded-pill px-5 py-2 btn-color mt-2 fs-5 btn-color-primary">
+    </form>
+    <a class="fs-5" href="{% url 'login' %}">Already have an account?</a>
+</div>
+{% bootstrap_javascript %}
+{% if error %}
+    <script>
+    function showAlert() {
+        var errorMessage = "{{ error }}";
+        alert(errorMessage);
+    }
+    window.onload = showAlert;
+    </script>
+{% endif %}
+<br>
+<p>Copyright © 2023 University of Windsor - IP2/Team 6</p>
+</body>
+</html>

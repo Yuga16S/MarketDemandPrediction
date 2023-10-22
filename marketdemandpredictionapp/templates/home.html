@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="left-align-content label-deco">
+    <div>
+        <label class = "label-deco" for="cropDropdown">Select a crop </label>
+        <select id="cropDropdown">
+            {% for crop in crop_names %}
+                <option value="{{ crop }}">{{ crop }}</option>
+            {% endfor %}
+        </select>
+    </div><br>
+    <div>
+        <label class = "label-deco" for="yearpicker">Select a year or year range:</label>
+        <input class = "label-deco" type="radio" name="yearSelection" id="singleYear" value="single" checked> Single Year
+        <input class = "label-deco" type="radio" name="yearSelection" id="yearRange" value="range"> Year Range
+    </div><br>
+    <div id="singleYearPicker">
+        <label class = "label-deco" for="yearpickerSingle">Select a year:</label>
+        <input type="text" id="yearpickerSingle" name="yearpickerSingle">
+    </div>
+    <div id="yearRangePicker" style="display: none;">
+        <label class = "label-deco" for="startYear">Start Year:</label>
+        <input type="text" id="startYear" name="startYear">
+        <label class = "label-deco" for="endYear">End Year:</label>
+        <input type="text" id="endYear" name="endYear">
+    </div><br>
+    <div>
+    <button id="generate" class="btn rounded-pill px-5 py-2 btn-color mt-2 fs-5 btn-color-primary">Predict</button><br><br>
+    <p id="result"></p>
+    </div>
+    <script>
+        $(document).ready(function() {
+    $("input[name='yearSelection']").change(function() {
+        var selectedValue = $("input[name='yearSelection']:checked").val();
+        if (selectedValue === "single") {
+            $("#singleYearPicker").show();
+            $("#yearRangePicker").hide();
+        } else if (selectedValue === "range") {
+            $("#singleYearPicker").hide();
+            $("#yearRangePicker").show();
+        }
+    });
+
+    $("#yearpickerSingle").datepicker({
+        changeMonth: false,
+        changeYear: true,
+        showButtonPanel: true,
+        yearRange: "1900:2099",
+        dateFormat: 'yy',
+        onClose: function(dateText, inst) {
+            var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+            $(this).datepicker('setDate', new Date(year, 1));
+        }
+    });
+
+    $("#startYear, #endYear").datepicker({
+        changeMonth: false,
+        changeYear: true,
+        showButtonPanel: true,
+        yearRange: "1900:2099",
+        dateFormat: 'yy',
+        onClose: function(dateText, inst) {
+            var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+            $(this).datepicker('setDate', new Date(year, 1));
+        }
+    });
+
+    $('#generate').click(function() {
+        var selectedCrop = $('#cropDropdown').val();
+        var selectedYear;
+
+        if ($("input[name='yearSelection']:checked").val() === "single") {
+            selectedYear = $('#yearpickerSingle').val();
+        } else {
+            var startYear = $('#startYear').val();
+            var endYear = $('#endYear').val();
+            selectedYear = startYear + "-" + endYear; // Format the selected year range
+        }
+
+        $.ajax({
+            url: '/predict/',
+            type: 'GET',
+            data: {
+                selected_crop: selectedCrop,
+                selected_year: selectedYear
+            },
+            success: function(data) {
+                $('#result').text(data);
+            },
+            error: function() {
+                alert('An error occurred.');
+            }
+        });
+    });
+});
+    </script>
+</div>
+{% endblock %}
