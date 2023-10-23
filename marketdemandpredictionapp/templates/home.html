@@ -28,6 +28,7 @@
     <button id="generate" class="btn rounded-pill px-5 py-2 btn-color mt-2 fs-5 btn-color-primary">Predict</button><br><br>
     <p id="result"></p>
     </div>
+    <canvas id="chartJSContainer" width="600" height="400"></canvas>
     <script>
         $(document).ready(function() {
     $("input[name='yearSelection']").change(function() {
@@ -67,14 +68,13 @@
 
     $('#generate').click(function() {
         var selectedCrop = $('#cropDropdown').val();
-        var selectedYear;
+        var selectedYearStart, selectedYearEnd;
 
         if ($("input[name='yearSelection']:checked").val() === "single") {
-            selectedYear = $('#yearpickerSingle').val();
+            selectedYearEnd = $('#yearpickerSingle').val();
         } else {
-            var startYear = $('#startYear').val();
-            var endYear = $('#endYear').val();
-            selectedYear = startYear + "-" + endYear; // Format the selected year range
+            selectedYearStart = $('#startYear').val();
+            selectedYearEnd = $('#endYear').val();
         }
 
         $.ajax({
@@ -82,10 +82,31 @@
             type: 'GET',
             data: {
                 selected_crop: selectedCrop,
-                selected_year: selectedYear
+                selected_start_year: selectedYearStart,
+                selected_end_year: selectedYearEnd
             },
-            success: function(data) {
-                $('#result').text(data);
+            success: function(chartData) {
+                $('#result').text(chartData);
+                var chartDataJson = JSON.parse(chartData);
+                var options = {
+                    type: 'line',
+                    data: {
+                        labels : chartDataJson.years.split(','),
+                        datasets : [
+                            {
+                                label: 'regression line',
+                                data: chartDataJson.values,
+                            }
+                        ],
+                    },
+                    options: {
+  	                    scales: {
+                        }
+                    }
+                };
+
+                var ctx = document.getElementById('chartJSContainer').getContext('2d');
+                new Chart(ctx, options);
             },
             error: function() {
                 alert('An error occurred.');

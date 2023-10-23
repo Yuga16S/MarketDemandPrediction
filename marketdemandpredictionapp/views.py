@@ -21,6 +21,8 @@ import smtplib
 from email.mime.text import MIMEText
 from django.conf import settings
 
+import json
+
 
 class RegisterView(View):
     def get(self, request):
@@ -112,21 +114,6 @@ def forgot_password(request):
 
 @login_required
 def home(request):
-    crops = ml_scripts.linear_removing_outliers.getCrops()
-
-    max_crop_code = Crops.objects.aggregate(Max('crop_code'))['crop_code__max']
-
-    if max_crop_code is None:
-        max_crop_code = -1
-
-    for crop in crops:
-
-        existing_crop = Crops.objects.filter(crop_name=crop).first()
-
-        if not existing_crop:
-            max_crop_code += 1
-            Crops.objects.create(crop_name=crop, crop_code=max_crop_code)
-
     crop_names = Crops.objects.values_list('crop_name', flat=True)
 
     context = {
@@ -152,14 +139,20 @@ def about_us(request):
 @login_required
 def predict(request):
     selected_crop = request.GET.get('selected_crop', None)
-    selected_year = request.GET.get('selected_year', None)
-    print("Selected year", selected_year)
-    crop_data = Crops.objects.get(crop_name=selected_crop)
-    crop_code = crop_data.crop_code
-    year = selected_year
-    y = ml_scripts.linear_removing_outliers.execute(crop_code, year)
-    return HttpResponse(y)
 
+    selected_end_year = request.GET.get('selected_end_year', None)
+    end_year = int(selected_end_year)
+
+    selected_start_year = request.GET.get('selected_start_year', None)
+    start_year = int(selected_start_year) if selected_start_year else end_year
+
+    crop = Crops.objects.get(crop_name=selected_crop)
+
+    predictions = ml_scripts.linear_removing_outliers.predict(crop, start_year, end_year)
+
+    chart_data = ml_scripts.linear_removing_outliers.getChartData(predictions, crop, start_year, end_year)
+    chart_json_data = json.dumps(chart_data)
+    return HttpResponse(chart_json_data)
 
 """
 #old register view without validation
