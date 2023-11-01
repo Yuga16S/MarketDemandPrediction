@@ -3,18 +3,54 @@
 User Profile
 {% endblock %}
 {% block content %}
+
 <div class="w-100 d-flex flex-column justify-content-center align-items-center">
-   <p class="capitalize fs-3">
-        <span class="label-deco">Username:</span>
-        <span class="value-deco">{{ user_profile.user.username | capfirst }}</span>
-    </p>
-    <p class="capitalize fs-3">
-        <span class="label-deco">Email ID:</span>
-        <span class="value-deco">{{ user_profile.user.email }}</span>
-    </p>
-    <p class="capitalize fs-3">
-        <span class="label-deco">Update Password:</span>
-        <a class="value-deco" href="{% url 'forgot_password' %}">click here!</a>
-    </p>
+     <h4 style="align-content: center">USER INFORMATION</h4>
+    <table class="profile-table1">
+        <tr>
+            <td style="font-size: large" class="table-heading"><b>USERNAME</b></td>
+            <td>{{ user_profile.user.username | capfirst }}</td>
+        </tr>
+
+        <tr>
+            <td style="font-size: large" class="table-heading"><b>EMAIL ID</b></td>
+            <td>{{ user_profile.user.email }}</td>
+        </tr>
+
+        <tr>
+            <td style="font-size: large" class="table-heading"><b>UPDATE PASSWORD</b></td>
+            <td><a class="link-style" href="{% url 'forgot_password' %}">click here!</a></td>
+        </tr>
+        </table>
+    <br><br>
+    <h4 style="align-content: center">USER LOGS</h4>
+    <table class="profile-table">
+        <thead>
+            <th class="table-header">Selected Crop</th>
+            <th class="table-header">Selected Start Year</th>
+            <th class="table-header">Selected End Year</th>
+            <th class="table-header">Request Date & Time</th>
+            <th class="table-header">View</th>
+        </thead>
+        {%  for user_preference in user_preferences %}
+        <tr>
+            <td class="capitalize fs-3, table-data">
+                <span class="value-deco">{{ user_preference.selected_crop.crop_name }}</span>
+            </td>
+            <td class="capitalize fs-3, table-data">
+                <span class="value-deco">{{ user_preference.selected_start_year }}</span>
+            </td>
+            <td class="capitalize fs-3, table-data">
+                <span class="value-deco">{{ user_preference.selected_end_year }}</span>
+            </td>
+            <td class="capitalize fs-3, table-data">
+                <span class="value-deco">{{ user_preference.request_time }}</span>
+            </td>
+            <td class="capitalize fs-3, table-data">
+                <a class="link-style" href="/home?cropName={{ user_preference.selected_crop.crop_name }}&startYear={{ user_preference.selected_start_year }}&endYear={{ user_preference.selected_end_year }}">View</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
 </div>
 {% endblock %}

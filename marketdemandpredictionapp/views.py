@@ -15,7 +15,7 @@ from django.views import View
 import ml_scripts.linear_removing_outliers
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from marketdemandpredictionapp.models import Crops, UserProfile
+from marketdemandpredictionapp.models import Crops, UserProfile, UserPreferences
 
 import smtplib
 from email.mime.text import MIMEText
@@ -23,9 +23,14 @@ from django.conf import settings
 
 import json
 
+class BannerView(View):
+    def get(self, request):
+        return render(request, 'banner.html')
 
 class RegisterView(View):
     def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('home')
         return render(request, 'register.html')
 
     def post(self, request):
@@ -115,9 +120,15 @@ def forgot_password(request):
 @login_required
 def home(request):
     crop_names = Crops.objects.values_list('crop_name', flat=True)
+    selected_crop_name = request.GET.get('cropName', '')
+    selected_start_year = request.GET.get('startYear', '')
+    selected_end_year = request.GET.get('endYear', '')
 
     context = {
-        'crop_names': crop_names
+        'crop_names': crop_names,
+        'selected_crop_name': selected_crop_name,
+        'selected_start_year': selected_start_year,
+        'selected_end_year': selected_end_year
     }
     return render(request, 'home.html', context)
 
@@ -126,8 +137,12 @@ def home(request):
 class ProfileView(View):
     def get(self, request):
         user_profile = UserProfile.objects.get(user=request.user)
+
+        user_preferences = UserPreferences.objects.filter(user_profile=user_profile)
+
         context = {
-            'user_profile': user_profile
+            'user_profile': user_profile,
+            'user_preferences': user_preferences,
         }
         return render(request, 'profile.html', context)
 
@@ -138,6 +153,8 @@ def about_us(request):
 
 @login_required
 def predict(request):
+    user_profile = UserProfile.objects.get(user=request.user)
+
     selected_crop = request.GET.get('selected_crop', None)
 
     selected_end_year = request.GET.get('selected_end_year', None)
@@ -152,6 +169,17 @@ def predict(request):
 
     chart_data = ml_scripts.linear_removing_outliers.getChartData(predictions, crop, start_year, end_year)
     chart_json_data = json.dumps(chart_data)
+
+    save_preference = request.GET.get('save', None) == 'true'
+
+    if save_preference:
+        UserPreferences.objects.create(
+            user_profile=user_profile,
+            selected_crop=crop,
+            selected_start_year=start_year,
+            selected_end_year=end_year
+        )
+
     return HttpResponse(chart_json_data)
 
 """

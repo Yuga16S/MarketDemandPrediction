@@ -6,33 +6,38 @@
     <title>{% block title %}Default Title{% endblock %}</title>
     {% bootstrap_css %}
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link rel='stylesheet' href="{% static 'css/yearpicker.css' %}" />
     <title>Market Demand Prediction</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src= {% static 'js/yearpicker.js' %}></script>
 </head>
-<body class="p-4 d-flex flex-column min-vh-100 w-100 d-flex flex-column" style="background-image: url('{% static "images/bgimage.jpg" %}'); background-repeat: no-repeat; background-size: cover;">
-<div class="overlay"></div>
-<div class="d-flex w-100 justify-content-between py-2 row g-0">
-    <div class="fs-2 fw-bold d-flex flex-row align-items-center col-md-6 justify-content-between">
-        <a href="{% url 'about_us' %}">
-            <img src="{% static 'images/logo3.png' %}" width="90" height="90">
+<body style="background-image: url('{% static "images/brown-grass.jpeg" %}'); background-repeat: no-repeat; background-size: cover; margin: 0;">
+<div class="d-flex w-100 justify-content-between py-2 row g-0" style="background-color: #312518; height: 75px; padding: 0;">
+    <div class="fs-2 fw-bold d-flex flex-row align-items-center col-md-6 justify-content-between container-fluid">
+        <a href="{% url 'home' %}" style="color: white; text-decoration: none;">
+            <img src="{% static 'images/logo3.png' %}" width="50" height="50" alt="Logo">
         </a>
     </div>
-    <div class="d-flex flex-row align-items-center col-md-6 justify-content-end">
-        <input type="button" value="Profile" onclick="location.href='/profile'"
-               class="btn-color-primary btn rounded-pill px-5 py-2 me-3">
+    <div class="d-flex flex-row align-items-center col-md-6 justify-content-end container-fluid">
+        <a href="/about-us" style="color: white; text-decoration: none; margin-right: 20px;">About Us</a>
+        <a href="/profile" style="color: white; text-decoration: none; margin-right: 20px;">Profile</a>
         <form action="{% url 'logout' %}" method="post">
             {% csrf_token %}
-            <input type="submit" value="Logout" class="btn-color-primary btn rounded-pill px-5 py-2 me-3">
+            <button type="submit" style="background: none; border: none; cursor: pointer; color: white;">
+                Logout
+            </button>
         </form>
     </div>
 </div>
+<br><br>
 <div class="flex-grow-1">
     {% block content %}{% endblock %}
 </div>
-<div id ='footer'>
+<br><br>
+<div id='footer'>
     <p align="center">Copyright © 2023 University of Windsor - IP2/Team 6</p>
 </div>
 {% bootstrap_javascript %}

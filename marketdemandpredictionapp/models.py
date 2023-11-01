@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from datetime import datetime
 
 
 class Crops(models.Model):
@@ -14,4 +15,11 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"Username: {self.user.username}"
 
-
+class UserPreferences(models.Model):
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, db_column='user_profile_id')
+    selected_crop = models.ForeignKey(Crops, on_delete=models.CASCADE, db_column='selected_crop_id')
+    selected_start_year = models.IntegerField(null=True)
+    selected_end_year = models.IntegerField()
+    request_time = models.DateTimeField(default=datetime.now, blank=False)
+    def __str__(self):
+        return self.user.username

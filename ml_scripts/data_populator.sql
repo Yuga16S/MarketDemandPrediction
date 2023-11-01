@@ -1,0 +1,10 @@
+INSERT INTO marketdemandpredictionapp_crops (crop_code, crop_name) VALUES (0, "Cassava");
+INSERT INTO marketdemandpredictionapp_crops (crop_code, crop_name) VALUES (1, "Maize");
+INSERT INTO marketdemandpredictionapp_crops (crop_code, crop_name) VALUES (2, "Plantains and others");
+INSERT INTO marketdemandpredictionapp_crops (crop_code, crop_name) VALUES (3, "Potatoes");
+INSERT INTO marketdemandpredictionapp_crops (crop_code, crop_name) VALUES (4, "Rice, paddy");
+INSERT INTO marketdemandpredictionapp_crops (crop_code, crop_name) VALUES (5, "Sorghum");
+INSERT INTO marketdemandpredictionapp_crops (crop_code, crop_name) VALUES (6, "Soybeans");
+INSERT INTO marketdemandpredictionapp_crops (crop_code, crop_name) VALUES (7, "Sweet potatoes");
+INSERT INTO marketdemandpredictionapp_crops (crop_code, crop_name) VALUES (8, "Wheat");
+INSERT INTO marketdemandpredictionapp_crops (crop_code, crop_name) VALUES (9, "Yams");

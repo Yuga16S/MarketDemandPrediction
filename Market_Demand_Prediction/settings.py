@@ -154,3 +154,4 @@ AUTHENTICATION_BACKENDS = [
     'Market_Demand_Prediction.backends.EmailBackend',  # Add the path to your custom backend here
     'django.contrib.auth.backends.ModelBackend',
 ]
+

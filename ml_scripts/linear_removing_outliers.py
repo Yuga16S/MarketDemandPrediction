@@ -28,27 +28,34 @@ def predict(crop, start_year, end_year):
     for i in range(predict_year_start_code, predict_year_end_code + 1):
         predict_year_codes.append([i])
 
-    stat_year_codes = data_frame[['Year']]
-    stat_values = data_frame['Value']
+    stat_year_codes = data_frame[['Year']] #[1961....2016]
+    stat_values = data_frame['Value'] #[prod values of 1961....2016]
 
+   #regr = linear_model.LinearRegression()
+    #regr.fit(stat_year_codes, stat_values)
+
+    #predictions = regr.predict(predict_year_codes) #[after fitting the stat data in the above step, they are predicting for predict_year_codes[user selected range / one year]
+    predictions = linearRegression(predict_year_codes, stat_year_codes, stat_values)
+
+    return predictions
+
+def linearRegression(predict_year_codes, stat_year_codes, stat_values):
     regr = linear_model.LinearRegression()
     regr.fit(stat_year_codes, stat_values)
-
-    predictions = regr.predict(predict_year_codes)
-
-    return predictions #will be shown to the user
+    predictions = regr.predict(predict_year_codes)  # [after fitting the stat data in the above step, they are predicting for predict_year_codes[user selected range / one year]
+    return predictions
 
 def getChartData(predictions, crop, start_year, end_year):
     data_frame_new = data_frame_1.copy()
     data_frame_new.drop(data_frame_new[data_frame_new['Item'] != crop.crop_code].index, inplace=True)
-    data_frame_new.sort_values("Year", inplace=True)
+    data_frame_new.sort_values("Year", inplace=True) #df holds data of only the user selected crop
 
-    stat_year_codes = data_frame_new[['Year']]
-    stat_values = data_frame_new['Value']
+    stat_year_codes = data_frame_new[['Year']] #[ 1 - 56 ] year codes
+    stat_values = data_frame_new['Value'] #[equivalent prod values]
 
-    stat_year_codes = sm.add_constant(stat_year_codes)
+    stat_year_codes = sm.add_constant(stat_year_codes) #adding constant, assum itercept
     model = sm.OLS(stat_values, stat_year_codes).fit()
-    stat_predictions = model.predict(stat_year_codes).values.tolist() #predictions for 1960 - 2016 using sm from new csv
+    stat_predictions = model.predict(stat_year_codes).values.tolist() #list of predictions for 1 - 56 using sm from new csv
 
     data_frame_old = data_frame_2.copy()
     data_frame_old.drop(data_frame_old[data_frame_old['Item'] != crop.crop_name].index, inplace=True)
@@ -56,7 +63,7 @@ def getChartData(predictions, crop, start_year, end_year):
 
     stat_values = data_frame_old['Value'].values.tolist()
     stat_years = data_frame_old['Year'].values.tolist()
-    stat_year_max = data_frame_old['Year'].max()
+    stat_year_max = data_frame_old['Year'].max() #max year, 2016
 
     years = data_frame_old['Year'].values.tolist()
     for year in range(stat_year_max + 1, end_year + 1):
@@ -78,7 +85,7 @@ def getChartData(predictions, crop, start_year, end_year):
     for year in stat_years:
         values_dict[year] = stat_predictions[index]
         index = index + 1
-    values_dict.update(predictions_dict) # merging 1960 - 2016 and 2020 - 2023
+    values_dict.update(predictions_dict) # merging 1960 - 2016 and 2020 - 2023, will look like [1961:10000, 1962:20000 ....... , 2023:400000]
 
     stat_values_dict = {}
     index = 0

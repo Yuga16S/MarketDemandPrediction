@@ -1,36 +1,51 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="left-align-content label-deco">
-    <div>
-        <label class = "label-deco" for="cropDropdown">Select a crop </label>
-        <select id="cropDropdown">
+    <div class="home-div-container" style="display : inline-flex">
+        <label class="label-deco" for="cropDropdown" style="margin-left: 20px">Crop</label>
+        <select id="cropDropdown" class="predictInput" style="width: min-content; margin-left: 10px; height: 30px">
             {% for crop in crop_names %}
                 <option value="{{ crop }}">{{ crop }}</option>
             {% endfor %}
         </select>
-    </div><br>
-    <div>
-        <label class = "label-deco" for="yearpicker">Select a year or year range:</label>
-        <input class = "label-deco" type="radio" name="yearSelection" id="singleYear" value="single" checked> Single Year
-        <input class = "label-deco" type="radio" name="yearSelection" id="yearRange" value="range"> Year Range
-    </div><br>
-    <div id="singleYearPicker">
-        <label class = "label-deco" for="yearpickerSingle">Select a year:</label>
-        <input type="text" id="yearpickerSingle" name="yearpickerSingle">
+        <input class="label-deco predictInput" type="radio" name="yearSelection" id="singleYear" value="single" checked style="margin-left: 50px">
+        <label class="label-deco" for="singleYear" >Single Year</label>
+        <input class="label-deco predictInput" type="radio" name="yearSelection" id="yearRange" value="range" style="margin-left: 20px">
+        <label class="label-deco" for="yearRange">Year Range</label>
+        <div id="singleYearPicker">
+            <label class="label-deco predictInput" for="yearpickerSingle"></label>
+            <input type="number" id="yearpickerSingle" class="predictInput" name="yearpickerSingle">
+        </div>
+        <div id="yearRangePicker" style="display: none;">
+            <label class="label-deco predictInput" for="startYear"></label>
+            <input type="number" id="startYear" name="startYear">
+            <label class="label-deco predictInput" for="endYear">To</label>
+            <input type="number" id="endYear" name="endYear">
+        </div>
+        <button id="generate" class="btn rounded-pill px-5 py-2 btn-color mt-2 fs-5 btn-color-primary" style="margin-left:auto; margin-right: 50px; order:9">Predict</button>
     </div>
-    <div id="yearRangePicker" style="display: none;">
-        <label class = "label-deco" for="startYear">Start Year:</label>
-        <input type="text" id="startYear" name="startYear">
-        <label class = "label-deco" for="endYear">End Year:</label>
-        <input type="text" id="endYear" name="endYear">
-    </div><br>
-    <div>
-    <button id="generate" class="btn rounded-pill px-5 py-2 btn-color mt-2 fs-5 btn-color-primary">Predict</button><br><br>
-    <p id="result"></p>
+    <br><br>
+    <div id="resultBox">
+        <div id="result"></div>
+        <button id="viewChartButton" class="btn rounded-pill px-5 py-2 btn-color mt-2 fs-5 btn-color-primary" style="display:none">View Chart</button>
     </div>
-    <canvas id="chartJSContainer" width="600" height="400"></canvas>
+    <div id="chartBox" style="display:none">
+        <div id="chartJSCanvasContainer">
+            <canvas id="chartJSContainer" ></canvas>
+        </div>
+        <button id="viewResultButton" class="btn rounded-pill px-5 py-2 btn-color mt-2 fs-5 btn-color-primary" style="">View Result</button>
+    </div>
     <script>
-        $(document).ready(function() {
+$(document).ready(function() {
+    $('#viewResultButton').click(function(){
+       $('#resultBox').show();
+       $('#chartBox').hide();
+    });
+
+    $('#viewChartButton').click(function(){
+       $('#chartBox').show();
+       $('#resultBox').hide();
+    });
+
     $("input[name='yearSelection']").change(function() {
         var selectedValue = $("input[name='yearSelection']:checked").val();
         if (selectedValue === "single") {
@@ -42,39 +57,36 @@
         }
     });
 
-    $("#yearpickerSingle").datepicker({
-        changeMonth: false,
-        changeYear: true,
-        showButtonPanel: true,
-        yearRange: "1900:2099",
-        dateFormat: 'yy',
-        onClose: function(dateText, inst) {
-            var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
-            $(this).datepicker('setDate', new Date(year, 1));
-        }
+    $("#yearpickerSingle, #startYear, #endYear").yearpicker({
+        startYear : 2017
     });
 
-    $("#startYear, #endYear").datepicker({
-        changeMonth: false,
-        changeYear: true,
-        showButtonPanel: true,
-        yearRange: "1900:2099",
-        dateFormat: 'yy',
-        onClose: function(dateText, inst) {
-            var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
-            $(this).datepicker('setDate', new Date(year, 1));
-        }
-    });
-
+    var save = true;
     $('#generate').click(function() {
         var selectedCrop = $('#cropDropdown').val();
         var selectedYearStart, selectedYearEnd;
 
         if ($("input[name='yearSelection']:checked").val() === "single") {
             selectedYearEnd = $('#yearpickerSingle').val();
+
+            if (! selectedYearEnd) {
+                alert("Please select a year.");
+                return;
+            } else if (parseInt(selectedYearEnd) < 2017) {
+                alert("Invalid year.");
+                return;
+            }
         } else {
             selectedYearStart = $('#startYear').val();
             selectedYearEnd = $('#endYear').val();
+
+            if (! selectedYearStart || ! selectedYearEnd) {
+                alert("Please select a year range.");
+                return;
+            } else if (parseInt(selectedYearStart) < 2017 || parseInt(selectedYearStart) > parseInt(selectedYearEnd)) {
+                alert("Invalid year range.");
+                return;
+            }
         }
 
         $.ajax({
@@ -83,37 +95,130 @@
             data: {
                 selected_crop: selectedCrop,
                 selected_start_year: selectedYearStart,
-                selected_end_year: selectedYearEnd
+                selected_end_year: selectedYearEnd,
+                save: save
             },
             success: function(chartData) {
-                $('#result').text(chartData);
+                var chartDataJson = JSON.parse(chartData);
+
+                var predictionsData = chartDataJson.predictions;
+                var tableHTML = '<table style="border-collapse: collapse; width: 10%; border: 2px solid #000; padding: 10%; background-color: white;">';
+                tableHTML += '<thead style="background-color: #f2f2f2;"><tr><th style="border: 1px solid #ddd; padding: 8px;">Year</th><th style="border: 1px solid #ddd; padding: 8px;">Prediction</th></tr></thead>';
+                tableHTML += '<tbody>';
+                for (var key in predictionsData) {
+                    if (predictionsData.hasOwnProperty(key)) {
+                        tableHTML += '<tr><td style="border: 1px solid #ddd; padding: 8px;">' + key + '</td><td style="border: 1px solid #ddd; padding: 8px;">' + predictionsData[key] + '</td></tr>';
+                    }
+                }
+                tableHTML += '</tbody>';
+                tableHTML += '</table>';
+                $('#result').html(tableHTML);
+                $('#viewChartButton').show();
+                //$('#result').text(chartData);
                 var chartDataJson = JSON.parse(chartData);
                 var options = {
                     type: 'line',
+                    responsive : true,
                     data: {
                         labels : chartDataJson.years.split(','),
                         datasets : [
                             {
+                                label: 'scattered',
+                                data: chartDataJson.statValues,
+                                borderColor: 'rgb(41,72,6)',
+                                showLine: false,
+                                pointRadius: 5,
+                                backgroundColor: 'green'
+                            },
+                            {
+                                label: 'predictions',
+                                data: chartDataJson.predictions,
+                                pointStyle: 'triangle',
+                                pointRadius: 8,
+                                borderColor: 'rgb(6,21,72)',
+                                backgroundColor: 'blue'
+                            },
+                            {
                                 label: 'regression line',
                                 data: chartDataJson.values,
+                                borderColor: 'rgba(255, 0, 0, 1)',
+                                pointRadius: 0
                             }
                         ],
                     },
                     options: {
-  	                    scales: {
-                        }
-                    }
+                        tooltips: {
+                            filter: tooltipItem => tooltipItem.datasetIndex == 0
+                        },
+                        scales: {
+                            x: {
+                                ticks: {
+                                    color: 'black',
+                                },
+                            },
+                            y: {
+                                ticks: {
+                                    color: 'black',
+                                },
+                            },
+                        },
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: 'black',
+                                },
+                            },
+                        },
+                        elements: {
+                            point: {
+                                borderColor: 'rgba(255, 0, 0, 1)',
+                                backgroundColor: 'rgba(255, 0, 0, 1)',
+                            },
+                        },
+                    },
                 };
-
+                $('#chartJSCanvasContainer').html('<canvas id="chartJSContainer"></canvas>');
                 var ctx = document.getElementById('chartJSContainer').getContext('2d');
+                var chartContainer = document.getElementById('chartJSCanvasContainer');
                 new Chart(ctx, options);
+                chartContainer.style.backgroundColor = 'white';
             },
             error: function() {
                 alert('An error occurred.');
             }
         });
     });
+
+    {% if selected_crop_name %}
+        var selectedCropName = '{{ selected_crop_name }}';
+        var selectedStartYear = '{{ selected_start_year }}';
+        var selectedEndYear = '{{ selected_end_year }}';
+
+        $('#cropDropdown').val('{{ selected_crop_name }}');
+        if (selectedStartYear === selectedEndYear) {
+            $('#singleYear').prop('checked', true);
+            $('#singleYear').change();
+
+            $('#yearpickerSingle').val(selectedStartYear);
+        } else {
+            $('#yearRange').prop('checked', true);
+            $('#yearRange').change();
+
+            $('#startYear').val(selectedStartYear);
+            $('#endYear').val(selectedEndYear);
+        }
+
+        save = false;
+        $('#generate').click();
+
+        $('#generate').hide();
+
+        $('.predictInput').prop('disabled', true)
+
+
+    {% endif %}
 });
     </script>
 </div>
 {% endblock %}
+
