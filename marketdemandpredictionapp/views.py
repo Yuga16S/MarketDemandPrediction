@@ -27,6 +27,17 @@ class BannerView(View):
     def get(self, request):
         return render(request, 'banner.html')
 
+class GuestView(View):
+
+    def get(self, request):
+        crop_names = Crops.objects.values_list('crop_name', flat=True)
+
+        context = {
+            'crop_names': crop_names,
+        }
+        return render(request, 'guest_home.html', context)
+
+
 class RegisterView(View):
     def get(self, request):
         if request.user.is_authenticated:
@@ -151,9 +162,10 @@ def about_us(request):
     return render(request, 'about_us.html')
 
 
-@login_required
 def predict(request):
-    user_profile = UserProfile.objects.get(user=request.user)
+    user_profile = None;
+    if request.user.is_authenticated:
+        user_profile = UserProfile.objects.get(user=request.user)
 
     selected_crop = request.GET.get('selected_crop', None)
 
@@ -172,7 +184,7 @@ def predict(request):
 
     save_preference = request.GET.get('save', None) == 'true'
 
-    if save_preference:
+    if user_profile and save_preference:
         UserPreferences.objects.create(
             user_profile=user_profile,
             selected_crop=crop,
