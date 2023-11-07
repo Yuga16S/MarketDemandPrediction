@@ -2,7 +2,7 @@
 {% block content %}
     <div class="home-div-container" style="display : inline-flex">
         <label class="label-deco" for="cropDropdown" style="margin-left: 20px; font-size: 15px;">Crop</label>
-        <select id="cropDropdown" class="predictInput" style="width: min-content; margin-left: 10px; height: 30px; font-size: 15px;">
+        <select id="cropDropdown" class="predictInput" style="width: min-content; margin-left: 10px; height: 30px; font-size: 15px;" title="Crops are cultivated plants grown for food, fiber, or other valuable products, Please choose a crop for which you would like to predict the quantity to be produced.">
             {% for crop in crop_names %}
                 <option value="{{ crop }}">{{ crop }}</option>
             {% endfor %}
@@ -13,7 +13,7 @@
         <label class="label-deco" for="yearRange" style="font-size: 15px;">Year Range</label>
         <div id="singleYearPicker">
             <label class="label-deco predictInput" for="yearpickerSingle"></label>
-            <input type="number" id="yearpickerSingle" class="predictInput" name="yearpickerSingle">
+            <input type="number" id="yearpickerSingle" class="predictInput" name="yearpickerSingle" title="Select a year or a range to predict the production.">
         </div>
         <div id="yearRangePicker" style="display: none;">
             <label class="label-deco predictInput" for="startYear"></label>
@@ -25,15 +25,19 @@
     </div>
     <br><br>
     <div id="resultBox">
-         <div id="result"></div>
-        <button id="viewChartButton" class="btn rounded-pill px-5 py-2 btn-color mt-2 fs-5 btn-color-primary" style="display:none">View Chart</button>
+         <div id="result"></div><br>
+         <button id="viewChartButton" class="btn rounded-pill px-5 py-2 btn-color mt-2 fs-5 btn-color-primary" style="display:none">View Chart</button>
     </div>
+    <br><br>
      <div id="chartBox" style="display:none">
         <div id="chartJSCanvasContainer">
             <canvas id="chartJSContainer" ></canvas>
         </div>
-        <button id="viewResultButton" class="btn rounded-pill px-5 py-2 btn-color mt-2 fs-5 btn-color-primary" >View Result</button>
-    </div>
+         <br>
+        <div style="display: flex; justify-content: center; align-items: center;">
+            <button id="viewResultButton" class="btn rounded-pill px-5 py-2 btn-color mt-2 fs-5 btn-color-primary" >View Result</button>
+        </div>
+     </div>
     <script>
 $(document).ready(function() {
     $('#viewResultButton').click(function(){
@@ -182,6 +186,10 @@ $(document).ready(function() {
                 var chartContainer = document.getElementById('chartJSCanvasContainer');
                 new Chart(ctx, options);
                 chartContainer.style.backgroundColor = 'white';
+                chartContainer.style.marginLeft = "90px";
+                chartContainer.style.marginRight = "90px";
+
+
             },
             error: function() {
                 alert('An error occurred.');

@@ -6,7 +6,7 @@ User Profile
 
 <div class="w-100 d-flex flex-column justify-content-center align-items-center">
      <h4 style="align-content: center; color: white">USER INFORMATION</h4>
-    <table class="profile-table1">
+    <table class="profile-table1 table-hover table-responsive">
         <tr>
             <td style="font-size: large" class="table-heading"><b>USERNAME</b></td>
             <td>{{ user_profile.user.username | capfirst }}</td>
@@ -24,7 +24,7 @@ User Profile
         </table>
     <br><br>
     <h4 style="align-content: center; color: white">USER LOGS</h4>
-    <table class="profile-table">
+    <table class="profile-table table-hover table-responsive">
         <thead>
             <th class="table-header">Selected Crop</th>
             <th class="table-header">Selected Start Year</th>

@@ -8,11 +8,6 @@ body {
   background-attachment: fixed !important;
 }
 
-/*<!--body {
-  min-height: 100%;
-  background: linear-gradient(180deg, #B2DFFF 0%, rgba(167, 102, 206, 0.20) 50%, rgba(177, 51, 255, 0.00) 100%);
-  background-attachment: fixed !important;
-}-->*/
 
 .home-page-logo {
     width: 180px !important;
@@ -124,7 +119,7 @@ a {
 }
 
 .label-deco{
-   color: #f8f9fadb;
+   color: #ffffff;
    margin-right: 10px;
     font-size: 50px;
     font-style: normal;
@@ -265,6 +260,40 @@ a {
     margin-bottom: 10px;
 }
 
+.highlight-field {
+    border: 3px solid rgba(255, 30, 0, 0.9);
+    transition: border 0s ease-out;
+}
+.glowing-field {
+    transition: box-shadow 0.3s ease-in-out;
+    box-shadow: 0 0 10px rgba(0, 0, 255, 0.5); /* Adjust the color and size as needed */
+    outline: none; /* Remove the default browser focus outline */
+    border: 1px solid #ccc; /* Add a border to maintain the field's structure */
+}
+
+.glowing-field:focus {
+    box-shadow: 0 0 15px rgba(0, 0, 255, 0.8); /* Adjust the focus glow */
+}
+
+dropdown-wrapper {
+    display: inline-block;
+    position: relative;
+}
+
+.tooltip {
+    display: none;
+    position: absolute;
+    background-color: #f0f0f0;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    top: 100%;
+    left: 0;
+}
+
+.predictInput:hover + .tooltip {
+    display: block;
+}
 
 
 

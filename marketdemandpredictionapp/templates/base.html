@@ -14,7 +14,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src= {% static 'js/yearpicker.js' %}></script>
 </head>
-<body style="background-image: url('{% static "images/leaf.jpeg" %}'); background-repeat: no-repeat; background-size: cover; margin: 0; backdrop-filter: blur(6px);">
+<body style="background-image: url('{% static "images/brown-grass.jpeg" %}'); background-repeat: no-repeat; background-size: cover; margin: 0; backdrop-filter: blur(6px);">
 <div class="d-flex w-100 justify-content-between py-2 row g-0" style="background-color: #03030070; height: 75px; padding: 0;">
     <div class="fs-2 fw-bold d-flex flex-row align-items-center col-md-6 justify-content-between container-fluid">
         {% if request.path != '/guest/' %}
@@ -35,7 +35,7 @@
         {% if request.path != '/guest/' %}
             <a href="{% url 'home' %}" style="color: white; text-decoration: none; margin-right: 20px;">Home</a>
         {% endif %}
-        <a href="#about" style="color: white; text-decoration: none; margin-right: 20px;">About Us</a>
+        <a href="{% url 'banner' %}#about" style="color: white; text-decoration: none; margin-right: 20px;">About Us</a>
         {% if request.path != '/guest/' %}
             <a href="/profile" style="color: white; text-decoration: none; margin-right: 20px;">Profile</a>
         {% endif %}

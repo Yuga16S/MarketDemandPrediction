@@ -13,10 +13,10 @@
     <form method="post" class="m-3 d-flex flex-column align-items-center">
         {% csrf_token %}
         <input type="text" name="email" id="email" class="form-control form-control-lg"
-           placeholder="Enter email">
+           placeholder="Enter email" required oninvalid="this.setCustomValidity('Please enter your email.'); this.classList.add('highlight-field');" oninput="this.setCustomValidity(''); this.classList.remove('highlight-field');" >
         <br>
         <input type="password" name="password" id="password" class="form-control form-control-lg"
-               placeholder="Enter password">
+               placeholder="Enter password" required oninvalid="this.setCustomValidity('Please enter your password.'); this.classList.add('highlight-field');" oninput="this.setCustomValidity(''); this.classList.remove('highlight-field');">
         <br>
         <input type="submit" value="Login" class="btn rounded-pill px-5 py-2 btn-color-primary mt-2 fs-5">
     </form>

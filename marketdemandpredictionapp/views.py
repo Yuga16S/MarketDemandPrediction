@@ -12,6 +12,7 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.views import View
 
+
 import ml_scripts.linear_removing_outliers
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
