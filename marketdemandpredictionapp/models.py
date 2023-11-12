@@ -7,6 +7,7 @@ class Crops(models.Model):
 
     crop_name = models.CharField(max_length=100)
     crop_code = models.PositiveIntegerField()
+    crop_description = models.CharField(max_length=10000)
 
 
 class UserProfile(models.Model):
