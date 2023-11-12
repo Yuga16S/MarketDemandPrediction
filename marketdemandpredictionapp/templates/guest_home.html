@@ -3,6 +3,7 @@
     <div class="home-div-container" style="display : inline-flex">
         <label class="label-deco" for="cropDropdown" style="margin-left: 20px; font-size: 15px;">Crop</label>
         <select id="cropDropdown" class="predictInput" style="width: min-content; margin-left: 10px; height: 30px; font-size: 15px;" title="Crops are cultivated plants grown for food, fiber, or other valuable products, Please choose a crop for which you would like to predict the quantity to be produced.">
+            <option value="" disabled selected>Select a crop</option>
             {% for crop in crop_names %}
                 <option value="{{ crop }}">{{ crop }}</option>
             {% endfor %}
@@ -69,6 +70,11 @@ $(document).ready(function() {
     $('#generate').click(function() {
         var selectedCrop = $('#cropDropdown').val();
         var selectedYearStart, selectedYearEnd;
+
+         if (! selectedCrop) {
+            alert("Please select a crop.");
+            return;
+        }
 
         if ($("input[name='yearSelection']:checked").val() === "single") {
             selectedYearEnd = $('#yearpickerSingle').val();
