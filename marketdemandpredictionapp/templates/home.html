@@ -25,6 +25,12 @@
         <button id="generate" class="btn rounded-pill px-5 py-2 btn-color mt-2 fs-5 btn-color-primary" style="margin-left:auto; margin-right: 100px; order:9">Predict</button>
     </div>
     <br><br>
+
+    <div id="cropDescriptionBox" style="margin-top: 20px;">
+        <p id="cropDescriptionParagraph"></p>
+    </div>
+    <br><br>
+
     <div id="resultBox">
          <div id="result"></div><br>
          <button id="viewChartButton" class="btn rounded-pill px-5 py-2 btn-color mt-2 fs-5 btn-color-primary" style="display:none">View Chart</button>
@@ -41,6 +47,49 @@
      </div>
     <script>
 $(document).ready(function() {
+
+    $('#cropDropdown').change(function() {
+        var selectedCrop = $(this).val();
+        var cropDescriptionBox = $('#cropDescriptionBox');
+        var cropDescriptionParagraph = $('#cropDescriptionParagraph');
+
+        if (selectedCrop) {
+            $.ajax({
+                url: '/get_crop_description/',
+                type: 'GET',
+                data: {
+                    selected_crop: selectedCrop,
+                },
+                dataType: 'json',
+                success: function(response) {
+                    cropDescriptionParagraph.text(response.crop_description);
+
+                    cropDescriptionBox.css({
+                        'border': '2px solid #000',
+                        'background-color': 'white',
+                        'margin-right': '60px',
+                        'margin-left': '60px',
+                        'padding': '10px'
+
+                    });
+                },
+                error: function() {
+                    alert('An error occurred while fetching the crop description.');
+                }
+            });
+        } else {
+            cropDescriptionParagraph.text('');
+            cropDescriptionBox.css({
+                'border': 'none',
+                'background-color': 'transparent',
+                'margin-right': '0',
+                'margin-left': '0',
+                'padding': '0'
+            });
+        }
+    });
+
+
     $('#viewResultButton').click(function(){
        $('#resultBox').show();
        $('#chartBox').hide();
@@ -110,7 +159,6 @@ $(document).ready(function() {
             },
             success: function(chartData) {
                 var chartDataJson = JSON.parse(chartData);
-
                 var predictionsData = chartDataJson.predictions;
                 var tableHTML = '<table style="border-collapse: collapse; width: 10%; border: 2px solid #000; padding: 10%; background-color: white;">';
                 tableHTML += '<thead style="background-color: #f2f2f2;"><tr><th style="border: 1px solid #ddd; padding: 8px;">Year</th><th style="border: 1px solid #ddd; padding: 8px;">Prediction</th></tr></thead>';

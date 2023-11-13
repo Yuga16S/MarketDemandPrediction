@@ -17,7 +17,8 @@ Including another URLconf
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from marketdemandpredictionapp import views
-from marketdemandpredictionapp.views import RegisterView, forgot_password, ProfileView, BannerView, GuestView
+from marketdemandpredictionapp.views import RegisterView, forgot_password, ProfileView, BannerView, GuestView, \
+    get_crop_description
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
@@ -38,4 +39,5 @@ urlpatterns = [
          name='password_reset_complete'),
     path('', BannerView.as_view(), name='banner'),
     path('guest/', GuestView.as_view(), name='guest'),
+    path('get_crop_description/', views.get_crop_description, name='get_crop_description'),
 ]

@@ -11,11 +11,13 @@ from django.utils.decorators import method_decorator
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.views import View
+from django.utils import timezone
+from django.http import JsonResponse
 
 
 import ml_scripts.linear_removing_outliers
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from marketdemandpredictionapp.models import Crops, UserProfile, UserPreferences
 
 import smtplib
@@ -63,7 +65,7 @@ class RegisterView(View):
             }
             return render(request, 'register.html', context=context)
 
-        user = User.objects.create_user(username=username, email=email, password=password)
+        user = User.objects.create_user(username=username, email=email, password=password, last_login=timezone.now())
         UserProfile.objects.create(user=user)
         return redirect('login')
 
@@ -140,10 +142,19 @@ def home(request):
         'crop_names': crop_names,
         'selected_crop_name': selected_crop_name,
         'selected_start_year': selected_start_year,
-        'selected_end_year': selected_end_year
+        'selected_end_year': selected_end_year,
     }
     return render(request, 'home.html', context)
 
+def get_crop_description(request):
+    selected_crop_name = request.GET.get('selected_crop', '')
+    crop = Crops.objects.filter(crop_name=selected_crop_name).first()
+
+    if crop:
+        crop_description = crop.crop_description
+        return JsonResponse({'crop_description': crop_description})
+    else:
+        return JsonResponse({'crop_description': ''})
 
 @method_decorator(login_required, name='get')
 class ProfileView(View):
