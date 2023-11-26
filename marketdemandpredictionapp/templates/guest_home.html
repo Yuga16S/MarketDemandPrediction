@@ -29,7 +29,14 @@
     <div id="cropDescriptionBox" style="margin-top: 20px;">
         <p id="cropDescriptionParagraph"></p>
     </div>
-    <br><br>
+    <br>
+
+    <div id="accuracyContainer" style="display: none; margin-top: 20px;">
+    <div id="accuracy">
+        <p id="accuracyText">{{ crop }}</p>
+    </div>
+    </div>
+    <br>
 
     <div id="resultBox">
          <div id="result"></div><br>
@@ -41,9 +48,9 @@
             <canvas id="chartJSContainer" ></canvas>
         </div>
          <br>
-        <div style="display: flex; justify-content: center; align-items: center;">
-            <button id="viewResultButton" class="btn rounded-pill px-5 py-2 btn-color mt-2 fs-5 btn-color-primary" >View Result</button>
-        </div>
+         <div style="display: flex; justify-content: center; align-items: center;">
+            <button id="viewResultButton" class="btn rounded-pill px-5 py-2 btn-color mt-2 fs-5 btn-color-primary" >Hide Chart</button>
+         </div>
      </div>
     <script>
 $(document).ready(function() {
@@ -93,11 +100,13 @@ $(document).ready(function() {
     $('#viewResultButton').click(function(){
        $('#resultBox').show();
        $('#chartBox').hide();
+       $('#viewChartButton').show();
     });
 
     $('#viewChartButton').click(function(){
        $('#chartBox').show();
-       $('#resultBox').hide();
+       /*$('#resultBox').hide();*/
+        $(this).hide();
     });
 
     $("input[name='yearSelection']").change(function() {
@@ -119,6 +128,46 @@ $(document).ready(function() {
     $('#generate').click(function() {
         var selectedCrop = $('#cropDropdown').val();
         var selectedYearStart, selectedYearEnd;
+
+        $('#accuracyContainer').css({
+                'border': '2px solid #000',
+                'background-color': 'white',
+                'margin-right': '60px',
+                'margin-left': '60px',
+                'padding': '10px',
+                'text-align': 'center'
+        }).show();
+
+        if (selectedCrop === 'Cassava') {
+            $('#accuracyText').html('<p>The predicted production accuracy is 24% - The accuracy is comparatively low due to insufficient data</p>');
+        }
+        if (selectedCrop === 'Maize') {
+            $('#accuracyText').html('<p>The predicted production accuracy is 67%</p>');
+        }
+        if (selectedCrop === 'Plantains and others') {
+            $('#accuracyText').html('<p>The predicted production accuracy is 60% </p>');
+        }
+        if (selectedCrop === 'Potatoes') {
+            $('#accuracyText').html('<p>The predicted production accuracy is 85% </p>');
+        }
+        if (selectedCrop === 'Rice, paddy') {
+            $('#accuracyText').html('<p>The predicted production accuracy is 57% </p>');
+        }
+        if (selectedCrop === 'Sorghum') {
+            $('#accuracyText').html('<p>The predicted production accuracy is 85% </p>');
+        }
+        if (selectedCrop === 'Soybeans') {
+            $('#accuracyText').html('<p>The predicted production accuracy is 97% </p>');
+        }
+        if (selectedCrop === 'Sweet potatoes') {
+            $('#accuracyText').html('<p>The predicted production accuracy is 32%. The accuracy is comparatively low due to insufficient data</p>');
+        }
+        if (selectedCrop === 'Wheat') {
+            $('#accuracyText').html('<p>The predicted production accuracy is 14%. The accuracy is comparatively low due to insufficient data</p>');
+        }
+        if (selectedCrop === 'Yams') {
+            $('#accuracyText').html('<p>The predicted production accuracy is 44%. The accuracy is comparatively low due to insufficient data</p>');
+        }
 
          if (! selectedCrop) {
             alert("Please select a crop.");
@@ -159,14 +208,14 @@ $(document).ready(function() {
             },
             success: function(chartData) {
                 var chartDataJson = JSON.parse(chartData);
-
-                var predictionsData = chartDataJson.predictions;
+                $('#chartBox').hide();
+                var predictionsData = chartDataJson.predict_values;
                 var tableHTML = '<table style="border-collapse: collapse; width: 10%; border: 2px solid #000; padding: 10%; background-color: white;">';
-                tableHTML += '<thead style="background-color: #f2f2f2;"><tr><th style="border: 1px solid #ddd; padding: 8px;">Year</th><th style="border: 1px solid #ddd; padding: 8px;">Prediction</th></tr></thead>';
+                tableHTML += '<thead style="background-color: #f2f2f2;"><tr><th style="border: 1px solid #ddd; padding: 8px;">Year</th><th style="border: 1px solid #ddd; padding: 8px;">Production[Hg/Ha]</th></tr></thead>';
                 tableHTML += '<tbody>';
                 for (var key in predictionsData) {
                     if (predictionsData.hasOwnProperty(key)) {
-                        tableHTML += '<tr><td style="border: 1px solid #ddd; padding: 8px;">' + key + '</td><td style="border: 1px solid #ddd; padding: 8px;">' + predictionsData[key] + '</td></tr>';
+                            tableHTML += '<tr><td style="border: 1px solid #ddd; padding: 8px;">' + key + '</td><td style="border: 1px solid #ddd; padding: 8px;">' + (predictionsData[key] < 0 ? 0 : predictionsData[key]) + '</td></tr>';
                     }
                 }
                 tableHTML += '</tbody>';
@@ -183,7 +232,7 @@ $(document).ready(function() {
                         datasets : [
                             {
                                 label: 'scattered',
-                                data: chartDataJson.statValues,
+                                data: chartDataJson.actual_values,
                                 borderColor: 'rgb(41,72,6)',
                                 showLine: false,
                                 pointRadius: 5,
@@ -191,7 +240,7 @@ $(document).ready(function() {
                             },
                             {
                                 label: 'predictions',
-                                data: chartDataJson.predictions,
+                                data: chartDataJson.predict_values,
                                 pointStyle: 'triangle',
                                 pointRadius: 8,
                                 borderColor: 'rgb(6,21,72)',
@@ -199,7 +248,7 @@ $(document).ready(function() {
                             },
                             {
                                 label: 'regression line',
-                                data: chartDataJson.values,
+                                data: chartDataJson.regression_values,
                                 borderColor: 'rgba(255, 0, 0, 1)',
                                 pointRadius: 0
                             }
@@ -243,7 +292,6 @@ $(document).ready(function() {
                 chartContainer.style.backgroundColor = 'white';
                 chartContainer.style.marginLeft = "90px";
                 chartContainer.style.marginRight = "90px";
-
 
             },
             error: function() {

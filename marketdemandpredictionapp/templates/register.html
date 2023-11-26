@@ -11,21 +11,54 @@
 <body class="w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('{% static "images/bg-fall.jpeg" %}'); background-repeat: no-repeat; background-size: cover;">
 <img src="{% static 'images/logo3.png' %}" class="register-logo">
 <div class="w-50 p-5 background-white shadow-lg rounded-3 mt-4">
-    <form method="post" class="m-3 d-flex flex-column align-items-center">
+    <form method="post" onsubmit="return checkPasswordStrength()" class="m-3 d-flex flex-column align-items-center">
         {% csrf_token %}
         <input type="text" id="username" name="username" class="form-control form-control-lg shadow-sm"
                placeholder="USERNAME" required oninvalid="this.setCustomValidity('Please enter your username.'); this.classList.add('highlight-field');" oninput="this.setCustomValidity(''); this.classList.remove('highlight-field');"><br>
 
         <input type="email" id="email" name="email" class="form-control form-control-lg shadow-sm" placeholder="EMAIL" required oninvalid="this.setCustomValidity('Please enter your email.'); this.classList.add('highlight-field');" oninput="this.setCustomValidity(''); this.classList.remove('highlight-field');"><br>
 
+
         <input type="password" id="password" name="password" class="form-control form-control-lg shadow-sm"
-               placeholder="PASSWORD" required oninvalid="this.setCustomValidity('Please enter your password.'); this.classList.add('highlight-field');" oninput="this.setCustomValidity(''); this.classList.remove('highlight-field');"><br>
+               placeholder="PASSWORD" required oninvalid="this.setCustomValidity('Please enter your password.'); this.classList.add('highlight-field');" oninput="this.setCustomValidity(''); this.classList.remove('highlight-field'); checkPasswordStrength1()"><br>
+
+        <p id="password-strength-info"></p>
 
         <input type="submit" value="Sign up" class="btn rounded-pill px-5 py-2 btn-color mt-2 fs-5 btn-color-primary">
     </form>
     <a class="fs-5" href="{% url 'login' %}">Already have an account?</a>
 </div>
 {% bootstrap_javascript %}
+<script>
+    function checkPasswordStrength1() {
+        var password = document.getElementById("password").value;
+        var infoMessage = document.getElementById("password-strength-info");
+
+        var regex = /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/;
+        if (regex.test(password)) {
+            infoMessage.innerHTML = "<span style='color: green;'>Password strength: Strong</span>";
+            return true;
+        } else {
+            infoMessage.innerHTML = "<span style='color: red;'>Password strength: Weak (Minimum 8 characters, combination of letters and numbers required)</span>";
+            return false;
+        }
+    }
+</script>
+<script>
+    function checkPasswordStrength() {
+        var password = document.getElementById("password").value;
+        var infoMessage = document.getElementById("password-strength-info");
+
+        var regex = /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/;
+        if (regex.test(password)) {
+            infoMessage.innerHTML = "<span style='color: green;'>Password strength: Strong</span>";
+            return true;
+        } else {
+            infoMessage.innerHTML = "<span style='color: red;'>Please enter a stronger password (Minimum 8 characters, combination of letters and numbers required)</span>";
+            return false;
+        }
+    }
+</script>
 {% if error %}
     <script>
     function showAlert() {

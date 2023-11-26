@@ -32,11 +32,14 @@
         {% if request.path == '/guest/' %}
             <a href="{% url 'register' %}" style="color: white; text-decoration: none; margin-right: 20px;">Would you like to create an account ?</a>
         {% endif %}
-        {% if request.path != '/guest/' %}
-            <a href="{% url 'home' %}" style="color: white; text-decoration: none; margin-right: 20px;">Home</a>
+        {% url 'home' as home_url %}
+        {% if request.path != '/guest/' and request.path != home_url %}
+            <a href="{% url 'home' %}" style="color: white; text-decoration: none; margin-right: 20px;">Predict</a> <!-- #home -->
         {% endif %}
-        <a href="{% url 'banner' %}#about" style="color: white; text-decoration: none; margin-right: 20px;">About Us</a>
-        {% if request.path != '/guest/' %}
+        <a href="{% url 'banner' %}" style="color: white; text-decoration: none; margin-right: 20px;">Home</a> <!-- #banner page -->
+        <a href="{% url 'banner' %}#about" style="color: white; text-decoration: none; margin-right: 20px;">About Us</a> <!-- #About Us -->
+        {% url 'profile' as profile_url %}
+        {% if request.path != '/guest/' and request.path != profile_url %}
             <a href="/profile" style="color: white; text-decoration: none; margin-right: 20px;">Profile</a>
         {% endif %}
         {% if request.path != '/guest/' %}

@@ -1,10 +1,11 @@
+import numpy as np
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
-from django.db.models import Max, Q
+from django.db.models import Q
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.decorators import method_decorator
@@ -17,7 +18,7 @@ from django.http import JsonResponse
 
 import ml_scripts.linear_removing_outliers
 from django.http import HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from marketdemandpredictionapp.models import Crops, UserProfile, UserPreferences
 
 import smtplib
@@ -26,9 +27,11 @@ from django.conf import settings
 
 import json
 
+
 class BannerView(View):
     def get(self, request):
         return render(request, 'banner.html')
+
 
 class GuestView(View):
 
@@ -125,7 +128,7 @@ def forgot_password(request):
 
             return redirect('password_reset_done')
         else:
-            messages.error(request, 'No user with that email address exists.')
+            messages.error(request, 'No user with that email address exists')
             return redirect('forgot_password')
     else:
         return render(request, 'forgot_password.html')
@@ -146,6 +149,7 @@ def home(request):
     }
     return render(request, 'home.html', context)
 
+
 def get_crop_description(request):
     selected_crop_name = request.GET.get('selected_crop', '')
     crop = Crops.objects.filter(crop_name=selected_crop_name).first()
@@ -155,6 +159,7 @@ def get_crop_description(request):
         return JsonResponse({'crop_description': crop_description})
     else:
         return JsonResponse({'crop_description': ''})
+
 
 @method_decorator(login_required, name='get')
 class ProfileView(View):
@@ -175,7 +180,7 @@ def about_us(request):
 
 
 def predict(request):
-    user_profile = None;
+    user_profile = None
     if request.user.is_authenticated:
         user_profile = UserProfile.objects.get(user=request.user)
 
@@ -189,9 +194,12 @@ def predict(request):
 
     crop = Crops.objects.get(crop_name=selected_crop)
 
-    predictions = ml_scripts.linear_removing_outliers.predict(crop, start_year, end_year)
+    predictions, existing_predictions = ml_scripts.linear_removing_outliers.predict(crop, start_year, end_year)
 
-    chart_data = ml_scripts.linear_removing_outliers.getChartData(predictions, crop, start_year, end_year)
+    chart_data = ml_scripts.linear_removing_outliers.get_chart_data(predictions, existing_predictions, crop, start_year, end_year)
+
+    chart_data = convert_int64_to_int(chart_data)
+
     chart_json_data = json.dumps(chart_data)
 
     save_preference = request.GET.get('save', None) == 'true'
@@ -206,70 +214,13 @@ def predict(request):
 
     return HttpResponse(chart_json_data)
 
-"""
-#old register view without validation
-class RegisterView(View):
-    def get(self, request):
-        return render(request, 'register.html')
 
-    def post(self, request):
-        username = request.POST['username']
-        email = request.POST['email']
-        password = request.POST['password']
-        existing_user = User.objects.filter(Q(username=username) | Q(email=email)).first()
-        context = {"error": None}
-        if existing_user:
-            context = {
-                "error": "username or email already exists!"
-            }
-            return render(request, 'register.html', context=context)
-        user = User.objects.create_user(username=username, email=email, password=password)
-        UserProfile.objects.create(user=user)
-        return redirect('login')
-
-        return render(request, 'register.html', context=context)"""
-
-
-"""
-#Code where validation is done but won't login the user
-def login_view(request):
-    if request.user.is_authenticated:
-        return redirect('home')
-
-    error = None  # Initialize error as None.
-
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        if not (username and password):
-            error = 'Please enter both username and password.'
-        else:
-            user = authenticate(request, username=username, password=password)
-
-            if user is not None:
-                login(request, user)
-                return redirect('home')
-            else:
-                error = 'Invalid username or password.'
-
-    return render(request, 'login.html', {'error': error})"""
-
-
-"""
-#old login code that had no validation
-def login_view(request):
-    if request.user.is_authenticated:
-        return redirect('home')
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('home')
-        else:
-            error_message = 'Invalid username or password.'
-            return render(request, 'login.html', {'error_message': error_message})
+def convert_int64_to_int(obj):
+    if isinstance(obj, np.int64):
+        return int(obj)
+    elif isinstance(obj, dict):
+        return {key: convert_int64_to_int(value) for key, value in obj.items()}
+    elif isinstance(obj, list):
+        return [convert_int64_to_int(item) for item in obj]
     else:
-        return render(request, 'login.html')"""
+        return str(obj)

@@ -58,7 +58,7 @@ a {
 }
 
 hr {
-  border-color: black !important;
+  border-color: #000000 !important;
   border-width: 2px !important;
   border-style: solid;
   margin-top: 20px;
@@ -266,13 +266,13 @@ a {
 }
 .glowing-field {
     transition: box-shadow 0.3s ease-in-out;
-    box-shadow: 0 0 10px rgba(0, 0, 255, 0.5); /* Adjust the color and size as needed */
-    outline: none; /* Remove the default browser focus outline */
-    border: 1px solid #ccc; /* Add a border to maintain the field's structure */
+    box-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
+    outline: none;
+    border: 1px solid #ccc;
 }
 
 .glowing-field:focus {
-    box-shadow: 0 0 15px rgba(0, 0, 255, 0.8); /* Adjust the focus glow */
+    box-shadow: 0 0 15px rgba(0, 0, 255, 0.8);
 }
 
 dropdown-wrapper {
@@ -294,6 +294,7 @@ dropdown-wrapper {
 .predictInput:hover + .tooltip {
     display: block;
 }
+
 
 
 

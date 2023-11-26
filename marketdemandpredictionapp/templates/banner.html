@@ -23,9 +23,14 @@ h1, h2, h3, h4, h5, h6 {
         <img src="{% static 'images/logo3.png' %}" width="50" height="50" alt="Logo">
       <a href="#about" class="w3-button">Market Demand Prediction</a>
         <div class="w3-right w3-hide-small">
+          {% if not user.is_authenticated %}
             <a href="{% url 'register' %}" class="w3-bar-item w3-button">Register</a>
             <a href="{% url 'login' %}" class="w3-bar-item w3-button">Login</a>
-            <a href="{% url 'guest' %}" class="w3-bar-item w3-button">View as Guest</a>
+            <a href="{% url 'guest' %}" class="w3-bar-item w3-button">Try as Guest</a>
+          {% else %}
+            <a href="{% url 'home' %}" class="w3-bar-item w3-button">Predict</a>
+            <a href="{% url 'logout' %}" class="w3-bar-item w3-button">Logout</a>
+          {% endif %}
         </div>
   </div>
 </div>
@@ -38,76 +43,90 @@ h1, h2, h3, h4, h5, h6 {
   </div>
 </header>
 
-<div style="max-width:1100px; margin-left: 85px"><br><hr></div>
+<div style="max-width:1100px; margin-left: 85px"><br><br><hr></div>
         <!-- Page content -->
     <div class="w3-content" style="max-width:1100px">
-          <!-- About Section -->
-          <div class="w3-row w3-padding-64" id="about">
+      <!-- Mission Section -->
+        <div class="w3-row w3-padding-64">
                 <div class="w3-col m6 w3-padding-large w3-hide-small">
-                    <img src="{% static 'images/farmer2.jpg' %}" class="w3-round w3-image w3-opacity-min" alt="Farmer" width="600" height="750" style="height: 450px; border: 2px solid black;">
+                     <img src="{% static 'images/farmer2.jpg' %}" class="w3-round w3-image w3-opacity-min" alt="Crop" style="width:100%; height: 470px; border: 2px solid black;">
+                </div>
+
+                <div class="w3-col m6 w3-padding-large">
+                    <h1 class="w3-center">Mission & Purpose</h1><br>
+                    <p class="w3-large">Our mission is to empower farmers and producers with data-driven insights, enabling them to make precise and profitable decisions in crop selection and production strategies.<br><br> We understand the challenges faced by farmers and producers, and our platform is designed to simplify decision-making, enhance crop planning, and ultimately contribute to your success.<br><br> Empowering farmers through actionable insights, we strive to catalyze success and foster a culture of data-driven decision-making for a thriving agricultural community. Our goal is to make a lasting positive impact on the industry's growth and sustainability. </p><br>
+                </div>
+        </div><hr>
+        <!-- Features & Benefits -->
+        <div class="w3-row w3-padding-64">
+            <div class="w3-col l6 w3-padding-large">
+               <h1 class="w3-center">Features & Benefits</h1><br>
+                    <p class="w3-large"> <b>Crop Production Prediction: </b> Our platform enables users to predict the amount of crop to produce based on their preferred crops and the year. </p>
+                    <p class="w3-large"> <b>Trend Analysis: </b> We provide interactive charts and data visualizations to help users analyze crop production trends, making it easier to make informed decisions. </p>
+                    <p class="w3-large"> <b>User Profiles: </b> Create and save profiles to keep track of your previous selections and revisit them at any time. </p>
+            </div>
+            <div class="w3-col l6 w3-padding-large">
+                <img src="{% static 'images/benefits.jpg' %}" class="w3-round w3-image w3-opacity-min" alt="Farmer" width="600" height="750" style="height: 410px; border: 2px solid black;">
+            </div>
+        </div><hr>
+        <!-- About Section -->
+                <div class="w3-row w3-padding-64" id="about">
+                <div class="w3-col m6 w3-padding-large w3-hide-small">
+                     <img src="{% static 'images/techy-farmer2.jpeg' %}" class="w3-round w3-image w3-opacity-min" alt="Farmer" width="600" height="750" style="height: 450px; border: 2px solid black;">
                 </div>
 
                 <div class="w3-col m6 w3-padding-large">
                     <h1 class="w3-center">About Us</h1><br>
                     <h5 class="w3-center">Predict and Produce - Improving the Precision of Crop Production Decisions</h5>
-                    <p class="w3-large">Welcome to Market Demand Prediction, your gateway to the future of agriculture. In a world where informed decisions can make or break a harvest, Market demand prediction is here to revolutionize the way farmers and producers approach crop planning with a user-centric approach. <br><br> Join us on our mission to transform agriculture. <a href="{% url 'register' %}" style="color: blue;"> Sign up</a> today to experience the power of data-driven decision-making and crop planning.</p>
-                </div>
-          </div>
-         <hr>
-      <!-- Mission Section -->
-
-        <div class="w3-row w3-padding-64" id="menu">
-            <div class="w3-col l6 w3-padding-large">
-                <h1 class="w3-center">Mission & Purpose</h1><br>
-                <p class="w3-large">Our mission is to empower farmers and producers with data-driven insights, enabling them to make precise and profitable decisions in crop selection and production strategies.<br><br> We understand the challenges faced by farmers and producers, and our platform is designed to simplify decision-making, enhance crop planning, and ultimately contribute to your success.<br> <br> </p><br>
-            </div>
-
-            <div class="w3-col l6 w3-padding-large">
-                <img src="{% static 'images/clean-crop.jpeg' %}" class="w3-round w3-image w3-opacity-min" alt="Crop" style="width:100%; height: 380px; border: 2px solid black;">
-            </div>
-        </div><hr>
-        <!-- Features & Benefits -->
-        <div class="w3-row w3-padding-64" id="about">
-                <div class="w3-col m6 w3-padding-large w3-hide-small">
-                    <img src="{% static 'images/benefits.jpg' %}" class="w3-round w3-image w3-opacity-min" alt="Farmer" width="600" height="750" style="height: 410px; border: 2px solid black;">
+                    <p class="w3-large">Welcome to Market Demand Prediction, your gateway to the future of agriculture. In a world where informed decisions can make or break a harvest, Market demand prediction is here to revolutionize the way farmers and producers approach crop planning with a user-centric approach. <br> </p>
+                        {% if not user.is_authenticated %}
+                            <p class="w3-large"> Join us on our mission to transform agriculture. <a href="{% url 'register' %}" style="color: blue;"> Sign up</a> or <a href="{% url 'guest' %}" style="color: blue;"> Try as Guest</a> today to experience the power of data-driven decision-making and crop planning.</p>
+                        {% endif %}
+                        {% if user.is_authenticated %}
+                            <br>
+                            <p class="w3-large"> Would you like to <a href="{% url 'home' %}" style="color: blue;"><b>PREDICT</b></a> crop production ? </p>
+                        {% endif %}
                 </div>
 
-                <div class="w3-col m6 w3-padding-large">
-                    <h1 class="w3-center">Features & Benefits</h1><br>
-                    <p class="w3-large"> <b>Crop Production Prediction: </b> Our platform enables users to predict the amount of crop to produce based on their preferred crops and the year. </p>
-                    <p class="w3-large"> <b>Trend Analysis: </b> We provide interactive charts and data visualizations to help users analyze crop production trends, making it easier to make informed decisions. </p>
-                    <p class="w3-large"> <b>User Profiles: </b> Create and save profiles to keep track of your previous selections and revisit them at any time. </p>
-                </div>
-          </div>
-         <hr>
-        <br><br>
+        </div><hr><br>
         <!-- Team details -->
         <div>
-            <h1 class="w3-center">Meet the Team</h1><br>
+            <h1 class="w3-center">Meet the Team</h1><br><br><br><br>
             <div style="display: flex; align-items: center;">
                 <div style="text-align: center; flex: 1;">
-                    <img class = "img-circle img-responsive" src="{% static 'images/avatar.jpeg' %}" alt="Avatar" style="width:100px; border-radius: 50%; border: 2px solid black;">
+                    <img class="img-circle img-responsive" src="{% static 'images/yp3.png' %}" alt="Avatar" style="width: 180px; height: 180px; object-fit: cover; border-radius: 50%; border: 2px solid black; display: block; margin-left: auto; margin-right: auto;">
                     <h5>Yugapriya Shankar</h5>
-                    <p class="w3-large">Web Developer</p>
+                    <a href="mailto:marketdemandprediction@gmail.com" style="color: blue; text-decoration: underline;">
+                            <i class="fas fa-envelope"></i>
+                                shankary@uwindsor.ca
+                    </a>
+                    <p class="w3-large"><b>Web Developer</b></p>
                 </div>
-            <div style="text-align: center; flex: 1;">
-                <img class = "img-circle img-responsive" src="{% static 'images/avatar.jpeg' %}" alt="Avatar" style="width:100px; border-radius: 50%; border: 2px solid black;">
-                <h5>Sagar</h5>
-                <p class="w3-large">Data Scientist</p>
-            </div>
-            <div style="text-align: center; flex: 1;">
-                <img class = "img-circle img-responsive" src="{% static 'images/avatar.jpeg' %}" alt="Avatar" style="width:100px; border-radius: 50%; border: 2px solid black;">
-                <h5>Nikhil</h5>
-                <p class="w3-large">Data Scientist</p>
-            </div>
+                <div style="text-align: center; flex: 1;">
+                    <img class="img-circle img-responsive" src="{% static 'images/sagar.png' %}" alt="Avatar" style="width: 180px; height: 180px; object-fit: cover; border-radius: 50%; border: 2px solid black; display: block; margin-left: auto; margin-right: auto;">
+                    <h5>Sagar Dharma</h5>
+                    <a href="mailto:marketdemandprediction@gmail.com" style="color: blue; text-decoration: underline;">
+                            <i class="fas fa-envelope"></i>
+                                dharma1@uwindsor.ca
+                    </a>
+                    <p class="w3-large"><b>Data Scientist</b></p>
+                </div>
+                <div style="text-align: center; flex: 1;">
+                    <img class="img-circle img-responsive" src="{% static 'images/nikil2.png' %}" alt="Avatar" style="width: 180px; height: 180px; object-fit: cover; border-radius: 50%; border: 2px solid black; display: block; margin-left: auto; margin-right: auto;">
+                    <h5>Nikil Rajasekaran</h5>
+                        <a href="mailto:marketdemandprediction@gmail.com" style="color: blue; text-decoration: underline;">
+                            <i class="fas fa-envelope"></i>
+                                bhoopatn@uwindsor.ca
+                        </a>
+                    <p class="w3-large"><b>Data Scientist</b></p>
+                </div>
             </div>
         </div>
         <br><br>
-    </div>
+    </div><hr>
 
     <!-- Contact us section -->
     <div>
-        <hr>
         <br><br>
         <h1 style="margin-left: 60px; margin-right: 60px; margin-left: auto; margin-right: auto; text-align: center;">Contact Us</h1>
        <p style="text-align: center;">
@@ -127,6 +146,5 @@ h1, h2, h3, h4, h5, h6 {
 <footer class="w3-center w3-light-grey w3-padding-32">
     <p align="center">Copyright © 2023 University of Windsor - IP2/Team 6</p>
 </footer>
-
 </body>
 </html>
