@@ -11,6 +11,7 @@
 <body class="w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('{% static "images/bg-fall.jpeg" %}'); background-repeat: no-repeat; background-size: cover;">
 <img src="{% static 'images/logo3.png' %}" class="register-logo">
 <div class="w-50 p-5 background-white shadow-lg rounded-3 mt-4">
+    <div id="error-div" class="error-message text-center"></div>
     <form method="post" onsubmit="return checkPasswordStrength()" class="m-3 d-flex flex-column align-items-center">
         {% csrf_token %}
         <input type="text" id="username" name="username" class="form-control form-control-lg shadow-sm"
@@ -61,11 +62,11 @@
 </script>
 {% if error %}
     <script>
-    function showAlert() {
-        var errorMessage = "{{ error }}";
-        alert(errorMessage);
-    }
-    window.onload = showAlert;
+        document.addEventListener('DOMContentLoaded', function () {
+            var errorMessage = "{{ error }}";
+            var errorDiv = document.getElementById('error-div');
+            errorDiv.innerHTML = '<span style="color: red;"> <strong>&#9888; </strong>' + errorMessage + '</span>';
+        });
     </script>
 {% endif %}
 <br>

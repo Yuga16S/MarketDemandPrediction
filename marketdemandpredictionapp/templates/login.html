@@ -10,6 +10,7 @@
 <body class="w-100 d-flex flex-column justify-content-center align-items-center bb" style="background-image: url('{% static "images/bg-fall.jpeg" %}'); background-repeat: no-repeat; background-size: cover;">
 <img src="{% static 'images/logo3.png' %}" class="register-logo">
 <div class="w-50 p-5 background-white shadow-lg d-flex flex-column rounded-3 mt-4">
+    <div id="error-div" class="error-message text-center"></div>
     <form method="post" class="m-3 d-flex flex-column align-items-center">
         {% csrf_token %}
         <input type="text" name="email" id="email" class="form-control form-control-lg"
@@ -20,6 +21,7 @@
         <br>
         <input type="submit" value="Login" class="btn rounded-pill px-5 py-2 btn-color-primary mt-2 fs-5">
     </form>
+
     <div class="d-flex flex-row justify-content-between">
         <a class="fs-5" href="{% url 'forgot_password' %}">Forgot Password?</a>
         <a class="fs-5" href="{% url 'register' %}">Register</a>
@@ -28,11 +30,11 @@
 {% bootstrap_javascript %}
 {% if error %}
     <script>
-    function showAlert() {
-        var errorMessage = "{{ error }}";
-        alert(errorMessage);
-    }
-    window.onload = showAlert;
+        document.addEventListener('DOMContentLoaded', function () {
+            var errorMessage = "{{ error }}";
+            var errorDiv = document.getElementById('error-div');
+            errorDiv.innerHTML = '<span style="color: red;"><strong>&#9888; </strong> ' + errorMessage + '</span>';
+        });
     </script>
 {% endif %}
 <br>

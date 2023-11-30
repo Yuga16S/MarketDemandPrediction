@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from datetime import datetime
+from django.utils import timezone
 
 
 class Crops(models.Model):
@@ -21,7 +22,7 @@ class UserPreferences(models.Model):
     selected_crop = models.ForeignKey(Crops, on_delete=models.CASCADE, db_column='selected_crop_id')
     selected_start_year = models.IntegerField(null=True)
     selected_end_year = models.IntegerField()
-    request_time = models.DateTimeField(default=datetime.now, blank=False)
+    request_time = models.DateTimeField(default=timezone.now, blank=False)
     def __str__(self):
         return self.user.username
 
